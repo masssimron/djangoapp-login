@@ -9,10 +9,15 @@ def login(request):
         password=request.POST['password']
         user=auth.authenticate(username=username,password=password)
         
-
         if user is not None:
-            auth.login(request,user)
-            return redirect('home')
+             if user.is_staff:
+
+                auth.login(request,user)
+                return redirect('admin')
+             else:
+                 auth.login(request,user)
+                 return redirect('home')
+
         else:
             #messages.error(request,'invalid')
             return redirect('error')    
@@ -29,3 +34,6 @@ def error(request):
 def logout(request):
     auth.logout(request)
     return render(request,'')
+
+def admin(request):
+    return render(request,'admin.html')    
